@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -21,6 +23,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // CRUCIAL FOR LOCAL LLM: Prevent AAPT from compressing the model file
+    androidResources {
+        noCompress += listOf("bin", "tflite", "task")
+    }
+
     buildTypes {
         release {
             optimization {
@@ -29,9 +36,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
     }
@@ -53,4 +61,17 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
+    implementation(libs.camera.core)
+    implementation(libs.camera.extensions)
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.mediapipe)
+    implementation(libs.taskRecognition)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }
